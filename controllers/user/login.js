@@ -16,4 +16,4 @@ const login = async (req, res) => {
   res.status(200).json({ success: true, token, user });
 };
 
-module.exports = login;
+module.exports = {login};
