@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const {addCourse} = require("../controllers/admin/addCourse");
-const {addResource} = require("../controllers/admin/addResource");
+const {addCourse, deleteCourse, updateCourse} = require("../controllers/admin/course");
+const {addResource, deleteResource, updateResource} = require("../controllers/admin/resource");
 
 const fileUpload = multer({ dest: "uploads/" });
 
@@ -19,3 +19,7 @@ router.post("/add-resource", () => {
     }
 
 }, addResource);
+router.delete("/delete-resource", deleteResource);
+router.put("/update-resource", updateResource);
+router.delete("/delete-course", deleteCourse);
+router.put("/update-course", updateCourse);
