@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const userRoute = require("./routes/userRoute");
+const studentRoute = require("./routes/studentRoute");
 
 app.use(
   cors({
@@ -14,6 +15,8 @@ app.use(
 app.use(express.json());
 
 app.use("/api/user", userRoute);
+app.use("/api/student", studentRoute);
+app.use("/api/admin", adminRoute);
 app.listen(5000, "0.0.0.0", () =>
   console.log("server is running on port 5000")
 );
