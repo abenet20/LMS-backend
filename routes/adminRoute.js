@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
 const {addCourse, deleteCourse, updateCourse} = require("../controllers/admin/course");
 const {addResource, deleteResource, updateResource} = require("../controllers/admin/resource");
 
@@ -23,3 +24,5 @@ router.delete("/delete-resource", deleteResource);
 router.put("/update-resource", updateResource);
 router.delete("/delete-course", deleteCourse);
 router.put("/update-course", updateCourse);
+
+module.exports = router;

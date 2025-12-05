@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const userRoute = require("./routes/userRoute");
 const studentRoute = require("./routes/studentRoute");
+const adminRoute = require("./routes/adminRoute");
 
 app.use(
   cors({

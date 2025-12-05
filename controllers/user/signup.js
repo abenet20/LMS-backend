@@ -1,5 +1,6 @@
 const database = require("../../controllers/data/database");
 const { send } = require("../../controllers/sender/sms");
+const bcrypt = require("bcrypt");
 
 const signup = async (req, res) => {
   const { name, email, password } = req.body;

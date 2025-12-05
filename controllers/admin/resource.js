@@ -1,7 +1,7 @@
 const database = require("../data/database");
 const verifyToken = require("../../middleware/verifyToken");
 
-const addResource = verifyToken(async (req, res) => {
+const addResource = async (req, res) => {
     try {
         const {courseId, title, type} = req.body;
         if (type === "link") {
@@ -15,9 +15,9 @@ const addResource = verifyToken(async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
-});
+};
 
-const deleteResource = verifyToken(async (req, res) => {
+const deleteResource = async (req, res) => {
     try {
         const {resourceId} = req.body;
         const resource = await database.query("DELETE FROM resources WHERE id = ?", [resourceId]);
@@ -25,9 +25,9 @@ const deleteResource = verifyToken(async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
-});
+};
 
-const updateResource = verifyToken(async (req, res) => {
+const updateResource = async (req, res) => {
     try {
         const {resourceId, title, type} = req.body;
         const resource = await database.query("UPDATE resources SET title = ?, type = ? WHERE id = ?", [title, type, resourceId]);
@@ -35,6 +35,6 @@ const updateResource = verifyToken(async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
-});
+};
 
 module.exports = {addResource, deleteResource, updateResource};

@@ -1,7 +1,7 @@
 const database = require("../data/database");
 const verifyToken = require("../../middleware/verifyToken");
 
-const addCourse = verifyToken(async (req, res) => {
+const addCourse = async (req, res) => {
     try {
     const {title, description,  createdBy} = req.body;
     const courseImage = req.file.path;
@@ -10,9 +10,9 @@ const addCourse = verifyToken(async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
-};);
+};
 
-const deleteCourse = verifyToken(async (req, res) => {
+const deleteCourse = async (req, res) => {
     try {
         const {courseId} = req.body;
         const course = await database.query("DELETE FROM courses WHERE id = ?", [courseId]);
@@ -20,9 +20,9 @@ const deleteCourse = verifyToken(async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
-});
+};
 
-const updateCourse = verifyToken(async (req, res) => {
+const updateCourse = async (req, res) => {
     try {
         const {courseId, title, description} = req.body;
         const course = await database.query("UPDATE courses SET title = ?, description = ? WHERE id = ?", [title, description, courseId]);
@@ -30,6 +30,6 @@ const updateCourse = verifyToken(async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
-});
+};
 
 module.exports = {addCourse, deleteCourse, updateCourse};

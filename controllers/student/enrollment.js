@@ -1,7 +1,7 @@
 const database = require("../data/database");
 const verifyToken = require("../../middleware/verifyToken");
 
-const enrollInCourse = verifyToken(async (req, res) => {
+const enrollInCourse = async (req, res) => {
     try {
         const {courseId, userId} = req.body;
         const enrollment = await database.query("INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)", [userId, courseId]);
@@ -9,6 +9,6 @@ const enrollInCourse = verifyToken(async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
-});
+};
 
 module.exports = {enrollInCourse};
