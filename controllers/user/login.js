@@ -4,11 +4,11 @@ const generateToken = require("../utils/generateToken");
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  const user = await database.query("SELECT * FROM users WHERE email = ?", [email]);
+  const [user] = await database.query("SELECT * FROM users WHERE email = ?", [email]);
   if (!user) {
     return res.status(401).json({ message: "Invalid email or password" });
   }
-  const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+  const isPasswordValid = await bcrypt.compare(password, user[0].password_hash);
   if (!isPasswordValid) {
     return res.status(401).json({ message: "Invalid email or password" });
   }
