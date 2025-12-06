@@ -6,13 +6,17 @@ const dashboardStats = async (req, res) => {
         const [courseCountResult] = await database.query("SELECT COUNT(*) AS courseCount FROM courses");
         const [enrollmentCountResult] = await database.query("SELECT COUNT(*) AS enrollmentCount FROM enrollments");
         const [resourceCount] = await database.query("SELECT COUNT(*) AS resourceCount FROM resources");
+        const [students] = await database.query("SELECT u.id AS user_id, u.email AS email FROM users u LEFT JOIN enrollments e ON e.user_id = u.id Left JOIN progress p ON p.user_id = u.id WHERE u.role = 'student'");
+        const [recentCourses] = await database.query("SELECT * FROM courses ORDER BY created_at DESC LIMIT 5");
         res.status(200).json({
             success: true,
             stats: {
                 students: studentsCount[0].studentCount,
                 courses: courseCountResult[0].courseCount,
                 enrollments: enrollmentCountResult[0].enrollmentCount,
-                resources: resourceCount[0].resourceCount
+                resources: resourceCount[0].resourceCount,
+                studentsList: students,
+                recentCourses: recentCourses
             }
         });
     } catch (error) {

@@ -44,7 +44,6 @@ const updateCourse = async (req, res) => {
 const getCourses = async (req, res) => {
     try{
         const [courses] = await database.query("SELECT * FROM courses WHERE is_active = 1");
-
         res.status(200).json({ success: true, courses });
     } catch (error){
         res.status(500).json({ success: false, message: "there are no courses found" });
