@@ -24,9 +24,13 @@ const fileUpload = multer({ storage });
 router.post(
     "/add-course",
     verifyToken,
-    fileUpload.multiple("courseImage", "media"),
+    fileUpload.single("courseImage"),
     addCourse
 );
+router.post("/add-resource", verifyToken , fileUpload.single("file"), addResource);
+router.get("/dashboard-stats", verifyToken , dashboardStats);
+router.delete("/delete-resource", verifyToken , deleteResource);
+router.put("/update-resource", verifyToken , updateResource);
 router.delete("/delete-course", verifyToken , deleteCourse);
 router.put("/update-course", verifyToken , updateCourse);
 router.get("/get-courses", verifyToken , getCourses);
