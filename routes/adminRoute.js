@@ -1,5 +1,5 @@
 const express = require("express");
-import path from "path";
+const path = require("path");
 const router = express.Router();
 const multer = require("multer");
 const verifyToken = require("../middleware/verifyToken");
