@@ -11,4 +11,17 @@ const enrollInCourse = async (req, res) => {
     }
 };
 
-module.exports = {enrollInCourse};
+const enrolledCourses = async (req, res) => {
+    try {
+        const {userId} = req.params;
+        const [enrollments] = await database.query(
+            "SELECT courses.* FROM enrollments JOIN courses ON enrollments.course_id = courses.id WHERE enrollments.user_id = ?",
+            [userId]
+        );
+        res.status(200).json({ success: true, enrollments });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+module.exports = {enrollInCourse, enrolledCourses};
