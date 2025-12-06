@@ -24,22 +24,17 @@ router.post("/add-course", verifyToken ,fileUpload.single("courseImage"), addCou
 router.post(
     "/add-resource",
     verifyToken,
+    fileUpload.fields([
+      { name: "file", maxCount: 1 }, 
+    ]),
     (req, res, next) => {
-      const { type } = req.query;  
-      console.log(type);
-  
-      if (type === "link") {
-        return next();
-      }
-  
-      if (type === "file" || type === "video"  || type === "audio" || type === "pdf") {
-        return fileUpload.single("file")(req, res, next);
-      }
-  
-      return res.status(400).json({ success: false, message: "Invalid type" });
+      const type = req.body.type;  
+      req.resourceType = type;    
+      next();
     },
     addResource
   );
+  
 router.delete("/delete-resource", verifyToken , deleteResource);
 router.put("/update-resource", verifyToken , updateResource);
 router.delete("/delete-course", verifyToken , deleteCourse);
