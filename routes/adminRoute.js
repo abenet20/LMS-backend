@@ -8,7 +8,7 @@ const {dashboardStats} = require("../controllers/admin/dashboard");
 const {addResource, deleteResource, updateResource} = require("../controllers/admin/resource");
 
 
-const uploadPath = "./uploads";   
+const uploadPath = "../uploads";   
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -24,11 +24,7 @@ const fileUpload = multer({ storage });
 router.post(
     "/add-course",
     verifyToken,
-    // accept either `courseImage` (preferred) or `image` from clients
-    fileUpload.fields([
-      { name: "courseImage", maxCount: 1 },
-      { name: "image", maxCount: 1 }
-    ]),
+    fileUpload.single("courseImage"),
     addCourse
 );
 router.post(
