@@ -21,19 +21,25 @@ const storage = multer.diskStorage({
 const fileUpload = multer({ storage });
 
 router.post("/add-course", verifyToken ,fileUpload.single("courseImage"), addCourse);
-router.post("/add-resource", verifyToken , () => {
-    try {
-        const type = req.body.type;
-        if (type === "link") {
-            return next();
-        } else if (type === "file") {
-            return fileUpload.single("file")(req, res, next);
-        }
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-
-}, addResource);
+router.post(
+    "/add-resource",
+    verifyToken,
+    (req, res, next) => {
+      const { type } = req.query;  
+      console.log(type);
+  
+      if (type === "link") {
+        return next();
+      }
+  
+      if (type === "file" || type === "video"  || type === "audio" || type === "pdf") {
+        return fileUpload.single("file")(req, res, next);
+      }
+  
+      return res.status(400).json({ success: false, message: "Invalid type" });
+    },
+    addResource
+  );
 router.delete("/delete-resource", verifyToken , deleteResource);
 router.put("/update-resource", verifyToken , updateResource);
 router.delete("/delete-course", verifyToken , deleteCourse);

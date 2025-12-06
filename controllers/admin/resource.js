@@ -3,12 +3,18 @@ const verifyToken = require("../../middleware/verifyToken");
 
 const addResource = async (req, res) => {
     try {
-        const {courseId, title, type} = req.body;
+        const {courseId, title} = req.body;
+        const type = req.query.type;
+
+        let url;
         if (type === "link") {
-            const url = req.body.url;
-        } else if (type === "file") {
-            const file = req.file.path;
+             url = req.body.url;
+        } else if (type === "file" || type === "video" || type === "audio" || type === "pdf") {
+             url = req.file.path;
+        } else {
+            return res.status(400).json({ success: false, message: "Invalid type" });
         }
+        
         const resource = await database.query("INSERT INTO resources (course_id, title, type, url) VALUES (?, ?, ?, ?)"
             , [courseId, title, type, url]);
         res.status(200).json({ success: true, resource });
