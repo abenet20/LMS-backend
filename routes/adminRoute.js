@@ -34,9 +34,9 @@ router.post(
   addResource
 );
 router.get("/dashboard-stats", verifyToken , dashboardStats);
-router.delete("/delete-resource", verifyToken , deleteResource);
+router.delete("/delete-resource/:courseId", verifyToken , deleteResource);
 router.put("/update-resource", verifyToken , updateResource);
-router.delete("/delete-course", verifyToken , deleteCourse);
+router.delete("/delete-course/:courseId", verifyToken , deleteCourse);
 router.put("/update-course", verifyToken , updateCourse);
 router.get("/get-courses", verifyToken , getCourses);
 router.get("/get-resources/:courseId", verifyToken , getResources);
