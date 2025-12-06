@@ -3,7 +3,8 @@ const verifyToken = require("../../middleware/verifyToken");
 
 const enrollInCourse = async (req, res) => {
     try {
-        const {courseId, userId} = req.body;
+        const {courseId} = req.body;
+        const userId = req.user.id;
         const enrollment = await database.query("INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)", [userId, courseId]);
         res.status(200).json({ success: true, enrollment });
     } catch (error) {
