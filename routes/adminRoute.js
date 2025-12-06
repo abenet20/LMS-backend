@@ -1,31 +1,43 @@
 const express = require("express");
-const handleUpload = require("../middleware/fileUploader");
+const path = require("path");
 const router = express.Router();
+const multer = require("multer");
 const verifyToken = require("../middleware/verifyToken");
-const {addCourse, deleteCourse, updateCourse, getCourses, getResources} = require("../controllers/admin/course");
+const {addCourse, deleteCourse, updateCourse, getCourses} = require("../controllers/admin/course");
 const {addResource, deleteResource, updateResource} = require("../controllers/admin/resource");
-const { dashboardStats } = require("../controllers/admin/dashboard");
 
 
-router.post("/add-course", verifyToken ,handleUpload({ storageType: "supabase", fieldName: "file" }), addCourse);
-router.post(
-    "/add-resource",
-    verifyToken,
-    handleUpload({ storageType: "supabase", fieldName: "file" }),
-    (req, res, next) => {
-      const type = req.body.type;  
-      req.resourceType = type;    
-      next();
-    },
-    addResource
-  );
-  
+const uploadPath = "C:/Users/hp/Documents/uploads";   
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  }
+});
+
+const fileUpload = multer({ storage });
+
+router.post("/add-course", verifyToken ,fileUpload.single("courseImage"), addCourse);
+router.post("/add-resource", verifyToken , () => {
+    try {
+        const type = req.body.type;
+        if (type === "link") {
+            return next();
+        } else if (type === "file") {
+            return fileUpload.single("file")(req, res, next);
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+
+}, addResource);
 router.delete("/delete-resource", verifyToken , deleteResource);
 router.put("/update-resource", verifyToken , updateResource);
 router.delete("/delete-course", verifyToken , deleteCourse);
 router.put("/update-course", verifyToken , updateCourse);
 router.get("/get-courses", verifyToken , getCourses);
-router.get("/get-resources", verifyToken , getResources);
-router.get("/dashboard-stats", verifyToken , dashboardStats);
 
 module.exports = router;

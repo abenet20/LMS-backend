@@ -1,31 +1,20 @@
 const database = require("../data/database");
+const verifyToken = require("../../middleware/verifyToken");
 
 const addResource = async (req, res) => {
-  try {
-    const { courseId, title, description, category ,type } = req.body;
-
-    // Make sure file was uploaded
-    if (!req.fileUrl) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "File missing or upload failed. Ensure frontend field name is 'file' and middleware sets req.fileUrl",
-      });
+    try {
+        const {courseId, title, type} = req.body;
+        if (type === "link") {
+            const url = req.body.url;
+        } else if (type === "file") {
+            const file = req.file.path;
+        }
+        const resource = await database.query("INSERT INTO resources (course_id, title, type, url) VALUES (?, ?, ?, ?)"
+            , [courseId, title, type, url]);
+        res.status(200).json({ success: true, resource });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
     }
-
-    const fileUrl = req.fileUrl; // URL from Supabase or wherever you uploaded
-
-    // Insert into DB
-    const resource = await database.query(
-      "INSERT INTO resources (title, description, category, type, url) VALUES (?, ?, ?, ?, ?)",
-      [title,description, category, type, fileUrl]
-    );
-
-    res.status(200).json({ success: true, resource });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: error.message });
-  }
 };
 
 const deleteResource = async (req, res) => {
