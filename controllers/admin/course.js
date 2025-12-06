@@ -4,7 +4,13 @@ const verifyToken = require("../../middleware/verifyToken");
 const addCourse = async (req, res) => {
     try {
     const {title, description,  createdBy} = req.body;
-    const courseImage = req.file.path;
+    // Prefer a public URL set by the upload middleware (supabase), else fall back to local path
+    const courseImage = req.fileUrl || (req.file && (req.file.path || req.file.location || req.file.filename));
+
+    if (!courseImage) {
+        return res.status(400).json({ success: false, message: "Course image missing. Send multipart/form-data with field 'file' or ensure middleware sets req.fileUrl." });
+    }
+
     const course = await database.query("INSERT INTO courses (title, description, course_image, created_by) VALUES (?, ?, ?, ?)", [title, description, courseImage, createdBy]);
     res.status(200).json({ success: true, course });
     } catch (error) {

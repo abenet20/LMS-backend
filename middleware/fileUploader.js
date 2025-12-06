@@ -29,7 +29,7 @@ function handleUpload({ storageType = "disk", uploadPath, fieldName = "file" } =
         if (storageType === "supabase" && req.file) {
           const file = req.file;
           const fileName = Date.now() + "-" + file.originalname;
-          const bucketName = "uploads";
+          const bucketName = process.env.SUPABASE_BUCKET || "uploads";
 
           const { error } = await supabase.storage
             .from(bucketName)
@@ -41,11 +41,15 @@ function handleUpload({ storageType = "disk", uploadPath, fieldName = "file" } =
 
           if (error) return next(error);
 
-          const { publicUrl, error: urlError } = supabase.storage
+          // getPublicUrl returns an object like { data: { publicUrl }, error }
+          const { data, error: urlError } = supabase.storage
             .from(bucketName)
             .getPublicUrl(fileName);
 
           if (urlError) return next(urlError);
+
+          const publicUrl = data && (data.publicUrl || data.public_url);
+          if (!publicUrl) return next(new Error('Failed to obtain public URL from Supabase'));
 
           // Attach the public URL to req for downstream usage
           req.fileUrl = publicUrl;
