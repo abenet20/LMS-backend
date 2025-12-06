@@ -24,7 +24,7 @@ const fileUpload = multer({ storage });
 router.post(
     "/add-course",
     verifyToken,
-    fileUpload.single("courseImage"),
+    fileUpload.single("coverImage"),
     addCourse
 );
 router.post(
