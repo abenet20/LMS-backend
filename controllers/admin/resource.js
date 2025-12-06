@@ -47,6 +47,7 @@ const getResources = async (req, res) => {
         res.status(200).json({ success: true, resources });
     } catch (error){
         res.status(500).json({ success: false, message: "there are no resources found" });
+        console.log(error);
     }
 };
 
