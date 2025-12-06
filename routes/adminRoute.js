@@ -2,7 +2,7 @@ const express = require("express");
 const handleUpload = require("../middleware/fileUploader");
 const router = express.Router();
 const verifyToken = require("../middleware/verifyToken");
-const {addCourse, deleteCourse, updateCourse, getCourses} = require("../controllers/admin/course");
+const {addCourse, deleteCourse, updateCourse, getCourses, getResources} = require("../controllers/admin/course");
 const {addResource, deleteResource, updateResource} = require("../controllers/admin/resource");
 
 
@@ -40,5 +40,6 @@ router.put("/update-resource", verifyToken , updateResource);
 router.delete("/delete-course", verifyToken , deleteCourse);
 router.put("/update-course", verifyToken , updateCourse);
 router.get("/get-courses", verifyToken , getCourses);
+router.get("/get-resources", verifyToken , getResources);
 
 module.exports = router;

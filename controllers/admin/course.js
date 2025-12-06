@@ -41,12 +41,22 @@ const updateCourse = async (req, res) => {
 const getCourses = async (req, res) => {
     try{
         const [courses] = await database.query(
-            "SELECT * FROM courses LEFT JOIN resources ON courses.id = resources.course_id LEFT JOIN enrollments ON courses.id = enrollments.course_id LEFT JOIN progress ON courses.id = progress.course_id WHERE courses.is_active = 1");
+            "SELECT * FROM courses ");
         res.status(200).json({ success: true, courses });
     } catch (error){
         res.status(500).json({ success: false, message: "there are no courses found" });
     }
 };
 
+const getResources = async (req, res) => {
+    try{
+        const [resources] = await database.query(
+            "SELECT * FROM resources");
+        res.status(200).json({ success: true, resources });
+    } catch (error){
+        res.status(500).json({ success: false, message: "there are no resources found" });
+    }
+};
 
-module.exports = {addCourse, deleteCourse, updateCourse, getCourses};
+
+module.exports = {addCourse, deleteCourse, updateCourse, getCourses, getResources};
