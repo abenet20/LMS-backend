@@ -7,7 +7,7 @@ const {CloudinaryStorage} = require("multer-storage-cloudinary");
 const verifyToken = require("../middleware/verifyToken");
 const {addCourse, deleteCourse, updateCourse, getCourses} = require("../controllers/admin/course");
 const {dashboardStats} = require("../controllers/admin/dashboard");
-const {addResource, deleteResource, updateResource} = require("../controllers/admin/resource");
+const {addResource, deleteResource, updateResource, getResources} = require("../controllers/admin/resource");
 
 const uploadPath = "uploads/";
    
@@ -39,5 +39,6 @@ router.put("/update-resource", verifyToken , updateResource);
 router.delete("/delete-course", verifyToken , deleteCourse);
 router.put("/update-course", verifyToken , updateCourse);
 router.get("/get-courses", verifyToken , getCourses);
+router.get("/get-resources/:courseId", verifyToken , getResources);
 
 module.exports = router;

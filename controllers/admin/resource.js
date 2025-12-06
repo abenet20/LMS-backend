@@ -41,4 +41,13 @@ const updateResource = async (req, res) => {
     }
 };
 
-module.exports = {addResource, deleteResource, updateResource};
+const getResources = async (req, res) => {
+    try{
+        const [resources] = await database.query("SELECT * FROM resources WHERE course_id = ? AND is_active = 1", [req.params.courseId]);
+        res.status(200).json({ success: true, resources });
+    } catch (error){
+        res.status(500).json({ success: false, message: "there are no resources found" });
+    }
+};
+
+module.exports = {addResource, deleteResource, updateResource, getResources};
