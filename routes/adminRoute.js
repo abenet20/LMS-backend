@@ -1,5 +1,5 @@
 const express = require("express");
-const path = require("path");
+import path from "path";
 const router = express.Router();
 const multer = require("multer");
 const verifyToken = require("../middleware/verifyToken");
@@ -7,8 +7,8 @@ const {addCourse, deleteCourse, updateCourse, getCourses} = require("../controll
 const {dashboardStats} = require("../controllers/admin/dashboard");
 const {addResource, deleteResource, updateResource} = require("../controllers/admin/resource");
 
-
-const uploadPath = "../uploads";   
+const uploadPath = path.join(__dirname, "uploads");
+   
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
