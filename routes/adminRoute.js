@@ -4,6 +4,7 @@ const router = express.Router();
 const multer = require("multer");
 const verifyToken = require("../middleware/verifyToken");
 const {addCourse, deleteCourse, updateCourse, getCourses} = require("../controllers/admin/course");
+const {dashboardStats} = require("../controllers/admin/dashboard");
 const {addResource, deleteResource, updateResource} = require("../controllers/admin/resource");
 
 
@@ -20,22 +21,12 @@ const storage = multer.diskStorage({
 
 const fileUpload = multer({ storage });
 
-router.post("/add-course", verifyToken ,fileUpload.single("courseImage"), addCourse);
-router.post("/add-resource", verifyToken , () => {
-    try {
-        const type = req.body.type;
-        if (type === "link") {
-            return next();
-        } else if (type === "file") {
-            return fileUpload.single("file")(req, res, next);
-        }
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-
-}, addResource);
-router.delete("/delete-resource", verifyToken , deleteResource);
-router.put("/update-resource", verifyToken , updateResource);
+router.post(
+    "/add-course",
+    verifyToken,
+    fileUpload.multiple("courseImage", "media"),
+    addCourse
+);
 router.delete("/delete-course", verifyToken , deleteCourse);
 router.put("/update-course", verifyToken , updateCourse);
 router.get("/get-courses", verifyToken , getCourses);
