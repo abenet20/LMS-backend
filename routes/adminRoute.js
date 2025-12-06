@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const {addCourse, deleteCourse, updateCourse} = require("../controllers/admin/course");
+const verifyToken = require("../middleware/verifyToken");
+const {addCourse, deleteCourse, updateCourse, getCourses} = require("../controllers/admin/course");
 const {addResource, deleteResource, updateResource} = require("../controllers/admin/resource");
 
 const fileUpload = multer({ dest: "uploads/" });
 
-router.post("/add-course", fileUpload.single("courseImage"), addCourse);
-router.post("/add-resource", () => {
+router.post("/add-course", verifyToken ,fileUpload.single("courseImage"), addCourse);
+router.post("/add-resource", verifyToken , () => {
     try {
         const type = req.body.type;
         if (type === "link") {
@@ -20,9 +21,10 @@ router.post("/add-resource", () => {
     }
 
 }, addResource);
-router.delete("/delete-resource", deleteResource);
-router.put("/update-resource", updateResource);
-router.delete("/delete-course", deleteCourse);
-router.put("/update-course", updateCourse);
+router.delete("/delete-resource", verifyToken , deleteResource);
+router.put("/update-resource", verifyToken , updateResource);
+router.delete("/delete-course", verifyToken , deleteCourse);
+router.put("/update-course", verifyToken , updateCourse);
+router.get("/get-courses", verifyToken , getCourses);
 
 module.exports = router;
