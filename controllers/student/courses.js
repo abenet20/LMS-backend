@@ -7,4 +7,16 @@ const getCourses = async (req, res) => {
     res.status(200).json({ success: true, courses });
 };
 
-module.exports = {getCourses};
+const getResources = async (req, res) => {
+    try {
+        const {courseId} = req.params;
+        const [resources] = await database.query(
+            "SELECT * FROM resources WHERE course_id = ?", [courseId]
+        );
+        res.status(200).json({ success: true, resources });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+module.exports = {getCourses, getResources};

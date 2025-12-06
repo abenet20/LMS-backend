@@ -24,4 +24,14 @@ const enrolledCourses = async (req, res) => {
     }
 };
 
-module.exports = {enrollInCourse, enrolledCourses};
+const deleteEnrollment = async (req, res) => {
+    try {
+        const [deleteEnrollment] = await database.query(
+            "DELETE FROM enrollments WHERE id = ?", [req.params.enrollId]
+        )
+    } catch(error){
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+module.exports = {enrollInCourse, enrolledCourses, deleteEnrollment};
