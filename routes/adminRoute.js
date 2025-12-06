@@ -24,10 +24,23 @@ const fileUpload = multer({ storage });
 router.post(
     "/add-course",
     verifyToken,
-    fileUpload.single("courseImage"),
+    // accept either `courseImage` (preferred) or `image` from clients
+    fileUpload.fields([
+      { name: "courseImage", maxCount: 1 },
+      { name: "image", maxCount: 1 }
+    ]),
     addCourse
 );
-router.post("/add-resource", verifyToken , fileUpload.single("file"), addResource);
+router.post(
+  "/add-resource",
+  verifyToken,
+  // accept either `file` (preferred) or `resource` from clients
+  fileUpload.fields([
+    { name: "file", maxCount: 1 },
+    { name: "resource", maxCount: 1 }
+  ]),
+  addResource
+);
 router.get("/dashboard-stats", verifyToken , dashboardStats);
 router.delete("/delete-resource", verifyToken , deleteResource);
 router.put("/update-resource", verifyToken , updateResource);

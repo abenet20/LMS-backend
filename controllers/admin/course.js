@@ -3,9 +3,16 @@ const database = require("../data/database");
 const addCourse = async (req, res) => {
     try {
     const {title, description, embedLink} = req.body;
-    const courseImage = req.file.path;
+    let imgPath = null;
+    if (req.file && req.file.path) {
+        imgPath = req.file.path;
+    } else if (req.files) {
+        if (req.files.courseImage && req.files.courseImage[0]) imgPath = req.files.courseImage[0].path;
+        else if (req.files.image && req.files.image[0]) imgPath = req.files.image[0].path;
+    }
+    if (!imgPath) return res.status(400).json({ success: false, message: "No course image uploaded" });
 
-    const course = await database.query("INSERT INTO courses (title, description, cover_image_url ,youtube_embed_link) VALUES (?, ?, ?, ?)", [title, description, courseImage, embedLink]);
+    const course = await database.query("INSERT INTO courses (title, description, cover_image_url ,youtube_embed_link) VALUES (?, ?, ?, ?)", [title, description, imgPath, embedLink]);
     res.status(200).json({ success: true, course });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });

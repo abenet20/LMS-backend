@@ -4,7 +4,15 @@ const verifyToken = require("../../middleware/verifyToken");
 const addResource = async (req, res) => {
     try {
         const {courseId, title, type} = req.body;
-        const url = req.file.path;
+        let filePath = null;
+        if (req.file && req.file.path) {
+            filePath = req.file.path;
+        } else if (req.files) {
+            if (req.files.file && req.files.file[0]) filePath = req.files.file[0].path;
+            else if (req.files.resource && req.files.resource[0]) filePath = req.files.resource[0].path;
+        }
+        if (!filePath) return res.status(400).json({ success: false, message: "No resource file uploaded" });
+        const url = filePath;
         const resource = await database.query("INSERT INTO resources (course_id, title, type, url) VALUES (?, ?, ?, ?)"
             , [courseId, title, type, url]);
         res.status(200).json({ success: true, resource });
