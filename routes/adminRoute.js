@@ -7,7 +7,7 @@ const {addCourse, deleteCourse, updateCourse, getCourses} = require("../controll
 const {dashboardStats} = require("../controllers/admin/dashboard");
 const {addResource, deleteResource, updateResource} = require("../controllers/admin/resource");
 
-const uploadPath = path.join(__dirname, "uploads");
+const uploadPath = "uploads/";
    
 
 const storage = multer.diskStorage({
