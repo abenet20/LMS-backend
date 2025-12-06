@@ -8,7 +8,7 @@ const {dashboardStats} = require("../controllers/admin/dashboard");
 const {addResource, deleteResource, updateResource} = require("../controllers/admin/resource");
 
 
-const uploadPath = "C:/Users/hp/Documents/uploads";   
+const uploadPath = "./uploads";   
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
