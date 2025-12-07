@@ -8,7 +8,7 @@ const signup = async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await database.query("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)", [name, email, hashedPassword]);
   mail(email, "Successful signup", "You have been successfully signed up to the LMS. You can now login and take your courses");
- generateToken({ id: user.id });
+ const token = generateToken({ id: user.id });
   res.status(201).json({ success: true, message: "User created successfully", user, token  });
 };
 
