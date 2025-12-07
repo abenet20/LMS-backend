@@ -39,7 +39,58 @@ const getCourses = async (req, res) => {
             is_active: row.is_active,
             created_at: row.created_at,
             enrolled: Boolean(row.enrolled),
+            resources: [] // will populate below
         }));
+
+        // fetch resources for all courses and attach per-course
+        const courseIds = normalized.map(c => c.id);
+        if (courseIds.length > 0) {
+            const [resourcesRows] = await database.query(
+                `SELECT * FROM resources WHERE course_id IN (?) AND is_active = 1`,
+                [courseIds]
+            );
+
+            // map courseId -> resources
+            const resourcesByCourse = new Map();
+            resourcesRows.forEach(r => {
+                if (!resourcesByCourse.has(r.course_id)) resourcesByCourse.set(r.course_id, []);
+                resourcesByCourse.get(r.course_id).push({
+                    id: r.id,
+                    title: r.title,
+                    type: r.type,
+                    url: r.url,
+                    is_active: r.is_active
+                });
+            });
+
+            // if user provided, fetch progress per resource
+            let progressMap = new Map();
+            if (uid > 0) {
+                const resourceIds = resourcesRows.map(r => r.id);
+                if (resourceIds.length > 0) {
+                    const [progressRows] = await database.query(
+                        `SELECT * FROM progress WHERE user_id = ? AND resource_id IN (?)`,
+                        [uid, resourceIds]
+                    );
+                    progressRows.forEach(p => {
+                        progressMap.set(p.resource_id, {
+                            id: p.id,
+                            status: p.status,
+                            updated_at: p.updated_at || null
+                        });
+                    });
+                }
+            }
+
+            // attach resources and any progress to courses
+            normalized.forEach(course => {
+                const resList = resourcesByCourse.get(course.id) || [];
+                course.resources = resList.map(r => ({
+                    ...r,
+                    progress: progressMap.get(r.id) || null
+                }));
+            });
+        }
 
         res.status(200).json({ success: true, courses: normalized });
     } catch (error) {
