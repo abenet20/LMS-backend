@@ -73,8 +73,11 @@ const getCourses = async (req, res) => {
                         [uid, resourceIds]
                     );
                     progressRows.forEach(p => {
-                        // store only the status string for each resource
-                        progressMap.set(p.resource_id, p.status || null);
+                        progressMap.set(p.resource_id, {
+                            id: p.id,
+                            status: p.status,
+                            updated_at: p.updated_at || null
+                        });
                     });
                 }
             }
@@ -84,7 +87,6 @@ const getCourses = async (req, res) => {
                 const resList = resourcesByCourse.get(course.id) || [];
                 course.resources = resList.map(r => ({
                     ...r,
-                    // progress is now a single status string or null
                     progress: progressMap.get(r.id) || null
                 }));
             });
