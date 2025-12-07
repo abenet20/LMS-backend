@@ -3,10 +3,10 @@ const database = require("../data/database");
 const dashboardStats = async (req, res) => {
     try {
         const [enrolledCoursesCount] = await database.query(
-            "SELECT COUNT(DISTINCT course_id) AS enrolledCourses FROM enrollments WHERE user_id = ?", [req.user.id]
+            "SELECT COUNT(*) AS enrolledCourses FROM enrollments WHERE user_id = ?", [req.user.id]
         );
         const [completedCoursesCount] = await database.query(
-            "SELECT COUNT(DISTINCT course_id) AS completedCourses FROM progress WHERE user_id = ? AND status = 'completed'", [req.user.id]
+            "SELECT COUNT(*) AS completedCourses FROM progress WHERE user_id = ? AND status = 'completed'", [req.user.id]
         );
         const inProgressCount =  (enrolledCoursesCount[0].enrolledCourses - completedCoursesCount[0].completedCourses);
         const [completedCourses] = await database.query(
