@@ -23,7 +23,7 @@ const addCourse = async (req, res) => {
 
 const deleteCourse = async (req, res) => {
     try {
-        const {courseId} = req.body;
+        const {courseId} = req.params;
         const course = await database.query("DELETE FROM courses WHERE id = ?", [courseId]);
         res.status(200).json({ success: true, course });
     } catch (error) {
