@@ -39,7 +39,7 @@ const getCourses = async (req, res) => {
             is_active: row.is_active,
             created_at: row.created_at,
             enrolled: Boolean(row.enrolled),
-            progress_status: row.progress_status || null
+            progress_status: row.progress_status || "uncompleted",
         }));
 
         res.status(200).json({ success: true, courses: normalized });
