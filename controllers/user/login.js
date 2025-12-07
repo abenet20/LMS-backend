@@ -18,7 +18,7 @@ const login = async (req, res) => {
 
     const token = generateToken({ id: user.id });
     // omit sensitive fields
-    const safeUser = { id: user.id, email: user.email };
+    const safeUser = { id: user.id, email: user.email, name: user.name, role: user.role };
     res.status(200).json({ success: true, token, user: safeUser });
   } catch (error) {
     // handle DB connectivity issues separately
