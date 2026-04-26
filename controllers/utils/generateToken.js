@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
-const jwt_secret = "0000-0000-0000-0000";
+require("dotenv").config();
+
+const jwt_secret = process.env.jwt_secret;
 
 const generateToken = (payload, expiresIn = "72h") => {
   return jwt.sign(payload, jwt_secret, { expiresIn });
